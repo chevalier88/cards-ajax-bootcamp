@@ -33,12 +33,6 @@ loginBtn.setAttribute('type', 'submit');
 loginBtn.textContent = 'Signup/ Login';
 loginDiv.appendChild(loginBtn);
 
-// create a user signup button
-// const signupBtn = document.createElement('button');
-// signupBtn.setAttribute('type', 'submit');
-// signupBtn.textContent = 'Sign Up';
-// loginDiv.appendChild(signupBtn);
-
 // login button functionality
 loginBtn.addEventListener('click', () => {
   const data = {
@@ -58,6 +52,14 @@ loginBtn.addEventListener('click', () => {
       const loggedInDiv = document.createElement('div');
       loggedInDiv.textContent = response.data;
       document.body.appendChild(loggedInDiv);
+
+      // manipulate DOM, set up create game button
+      // create game btn
+      const createGameBtn = document.createElement('button');
+      createGameBtn.addEventListener('click', createGame);
+      createGameBtn.setAttribute('id', 'start-game-button');
+      createGameBtn.innerText = 'Start Game';
+      document.body.appendChild(createGameBtn);
     })
     .catch((error) => {
       console.log(error);
@@ -100,6 +102,8 @@ const dealCards = function () {
 };
 
 const createGame = function () {
+  const createGameBtnAgain = document.getElementById('start-game-button');
+  createGameBtnAgain.remove();
   // Make a request to create a new game
   axios.post('/games')
     .then((response) => {
@@ -126,8 +130,3 @@ const createGame = function () {
       console.log(error);
     });
 };
-
-// manipulate DOM, set up create game button
-// createGameBtn.addEventListener('click', createGame);
-// createGameBtn.innerText = 'Create Game';
-// document.body.appendChild(createGameBtn);

@@ -32,42 +32,6 @@ export default function initUsersController(db) {
       res.send(error);
     }
   };
-  const signup = async (req, res) => {
-    try {
-      console.log(req.body);
-      const emailEntry = req.body.email;
-      const passwordEntry = req.body.password;
-      console.log(`printing emailEntry and password: ${emailEntry}, ${passwordEntry}`);
 
-      const userData = await db.User.findOne({
-        where: {
-          email: emailEntry,
-          password: passwordEntry,
-        },
-      });
-      console.log('printing userData...');
-      console.log(userData);
-
-      if (userData != null) {
-        console.log('this exact user already exists!');
-        res.send(userData);
-      } else {
-        console.log('seems we have a new user');
-        console.log(`${emailEntry}, ${passwordEntry}`);
-        const newUserData = await db.User.create({
-          where: {
-            email: emailEntry,
-            password: passwordEntry,
-          },
-        });
-        console.log('fresh user signup, printing newUserData...');
-        console.log(newUserData);
-        res.send('new');
-      }
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
-  return { login, signup };
+  return { login };
 }
