@@ -18,6 +18,8 @@ export default function initUsersController(db) {
       // console.log(userData);
       if (created) {
         console.log(created); // The boolean indicating whether this instance was just created
+        res.cookie('loggedIn', true);
+        res.cookie('userId', userData.id);
         res.send(`new user with ID ${userData.id} created`);
       } else {
         console.log('printing existing userData...');
