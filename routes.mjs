@@ -10,6 +10,8 @@ export default function bindRoutes(app) {
   app.get('/', GamesController.index);
   // allow user to login
   app.post('/login', UsersController.login);
+  // allow new user to signup
+  app.post('/signup', UsersController.signup);
   // create a new game
   app.post('/games', GamesController.create);
   // update a game with new cards

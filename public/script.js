@@ -30,14 +30,14 @@ passwordDiv.appendChild(passwordInput);
 // create a login button
 const loginBtn = document.createElement('button');
 loginBtn.setAttribute('type', 'submit');
-loginBtn.textContent = 'Log In';
+loginBtn.textContent = 'Signup/ Login';
 loginDiv.appendChild(loginBtn);
 
 // create a user signup button
-const signupBtn = document.createElement('button');
-signupBtn.setAttribute('type', 'submit');
-signupBtn.textContent = 'Sign Up';
-loginDiv.appendChild(signupBtn);
+// const signupBtn = document.createElement('button');
+// signupBtn.setAttribute('type', 'submit');
+// signupBtn.textContent = 'Sign Up';
+// loginDiv.appendChild(signupBtn);
 
 // login button functionality
 loginBtn.addEventListener('click', () => {
@@ -50,22 +50,18 @@ loginBtn.addEventListener('click', () => {
   axios
     .post('/login', data)
     .then((response) => {
+      console.log('printing response...');
+      console.log(response);
       console.log('printing response.data response...');
       console.log(response.data);
       loginDiv.remove();
-
       const loggedInDiv = document.createElement('div');
-      loggedInDiv.textContent = `Logged In as Player ${response.data.id}`;
+      loggedInDiv.textContent = response.data;
       document.body.appendChild(loggedInDiv);
-      // axios
-      //   .get('/user')
-      //   .then((response1) => {
-      //     console.log(response1.data);
-      //     userDiv.innerText = response1.data.user.email;
-      //   })
-      //   .catch((error) => console.log(error));
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 // DOM manipulation function that displays the player's current hand.
