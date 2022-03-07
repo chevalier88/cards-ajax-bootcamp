@@ -17,10 +17,15 @@ app.use(methodOverride('_method'));
 // Expose the files stored in the public folder
 app.use(express.static('public'));
 
+/*
+We will bind another body parser middleware express.json() to Express to read data from our AJAX POST request and populate request.body, because data in AJAX POST requests is packaged differently from those in form submissions.
+*/
+app.use(express.json());
+
 // Bind route definitions to the Express application
 bindRoutes(app);
 
 // Set Express to listen on the given port
-const PORT = process.env.PORT || 3004;
+const PORT = process.env.PORT || 3005;
 app.listen(PORT);
 console.log(`listening on ${PORT}`);

@@ -1,5 +1,5 @@
 export default function userModel(sequelize, DataTypes) {
-  return sequelize.define('game', {
+  return sequelize.define('user', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -7,10 +7,10 @@ export default function userModel(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     email: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING,
     },
     password: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING,
     },
     createdAt: {
       allowNull: false,

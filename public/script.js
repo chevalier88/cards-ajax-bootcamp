@@ -1,8 +1,72 @@
 // global value that holds info about the current hand.
 let currentGame = null;
 
-// create game btn
-const createGameBtn = document.createElement('button');
+// signup/login div is just called loginDiv
+const loginDiv = document.createElement('div');
+document.body.appendChild(loginDiv);
+
+// email div
+const emailDiv = document.createElement('div');
+loginDiv.appendChild(emailDiv);
+const emailLabel = document.createElement('label');
+emailLabel.setAttribute('for', 'email');
+emailLabel.textContent = 'email: ';
+emailDiv.appendChild(emailLabel);
+const emailInput = document.createElement('input');
+emailInput.setAttribute('id', 'email');
+emailDiv.appendChild(emailInput);
+
+// password div
+const passwordDiv = document.createElement('div');
+loginDiv.appendChild(passwordDiv);
+const passwordLabel = document.createElement('label');
+passwordLabel.setAttribute('for', 'password');
+passwordLabel.textContent = 'password: ';
+passwordDiv.appendChild(passwordLabel);
+const passwordInput = document.createElement('input');
+passwordInput.setAttribute('id', 'password');
+passwordDiv.appendChild(passwordInput);
+
+// create a login button
+const loginBtn = document.createElement('button');
+loginBtn.setAttribute('type', 'submit');
+loginBtn.textContent = 'Log In';
+loginDiv.appendChild(loginBtn);
+
+// create a user signup button
+const signupBtn = document.createElement('button');
+signupBtn.setAttribute('type', 'submit');
+signupBtn.textContent = 'Sign Up';
+loginDiv.appendChild(signupBtn);
+
+// login button functionality
+loginBtn.addEventListener('click', () => {
+  const data = {
+    email: emailInput.value,
+    password: passwordInput.value,
+  };
+  console.log('printing user login input data...');
+  console.log(data);
+  axios
+    .post('/login', data)
+    .then((response) => {
+      console.log('printing response.data response...');
+      console.log(response.data);
+      loginDiv.remove();
+
+      const loggedInDiv = document.createElement('div');
+      loggedInDiv.textContent = `Logged In as Player ${response.data.id}`;
+      document.body.appendChild(loggedInDiv);
+      // axios
+      //   .get('/user')
+      //   .then((response1) => {
+      //     console.log(response1.data);
+      //     userDiv.innerText = response1.data.user.email;
+      //   })
+      //   .catch((error) => console.log(error));
+    })
+    .catch((error) => console.log(error));
+});
 
 // DOM manipulation function that displays the player's current hand.
 const runGame = function ({ playerHand }) {
@@ -68,6 +132,6 @@ const createGame = function () {
 };
 
 // manipulate DOM, set up create game button
-createGameBtn.addEventListener('click', createGame);
-createGameBtn.innerText = 'Create Game';
-document.body.appendChild(createGameBtn);
+// createGameBtn.addEventListener('click', createGame);
+// createGameBtn.innerText = 'Create Game';
+// document.body.appendChild(createGameBtn);
