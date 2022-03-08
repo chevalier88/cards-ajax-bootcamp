@@ -2,24 +2,57 @@
 let currentGame = null;
 
 // DOM manipulation function that displays the player's current hand.
-const runGame = function ({ playerHand }) {
+const runGame = function ({ player1Hand, player2Hand }) {
   // manipulate DOM
   const player1Container = document.querySelector('#player1-container');
+
+  const player1HandScore = player1Hand[0].rank + player1Hand[1].rank;
+  const player2HandScore = player2Hand[0].rank + player2Hand[1].rank;
 
   player1Container.innerText = `
     Your Hand:
     ====
-    ${playerHand[0].name}
+    ${player1Hand[0].name}
     of
-    ${playerHand[0].suit}
+    ${player1Hand[0].suit}
     ====
-    ${playerHand[1].name}
+    ${player1Hand[1].name}
     of
-    ${playerHand[1].suit}
+    ${player1Hand[1].suit}
     ====
     Player 1's Total Score:
-    ${playerHand[0].rank + playerHand[1].rank}
+    ${player1HandScore}
   `;
+
+  const player2Container = document.querySelector('#player2-container');
+
+  player2Container.innerText = `
+    Your Hand:
+    ====
+    ${player2Hand[0].name}
+    of
+    ${player2Hand[0].suit}
+    ====
+    ${player2Hand[1].name}
+    of
+    ${player2Hand[1].suit}
+    ====
+    Player 2's Total Score:
+    ${player2HandScore}
+  `;
+
+  const infoContainer = document.querySelector('#info-container');
+
+  // specify win declaration
+  if (player1HandScore > player2HandScore) {
+    infoContainer.innerText = `Game ${currentGame.id}: Player 1 Wins!`;
+  } else if (player2HandScore > player1HandScore) {
+    infoContainer.innerText = `Game ${currentGame.id}: Player 2 Wins!`;
+  } else if (player1HandScore === player2HandScore) {
+    infoContainer.innerText = `Game ${currentGame.id}: Player Round is Tied!`;
+  } else if (currentGame.player1Hand[0] === null) {
+    infoContainer.innerText = `Game ${currentGame.id}: Player Round is Tied!`;
+  }
 };
 
 // make a request to the server
@@ -29,7 +62,8 @@ const dealCards = function () {
     .then((response) => {
       // get the updated hand value
       currentGame = response.data;
-
+      console.log('printing currentGame...');
+      console.log(currentGame);
       // display it to the user
       runGame(currentGame);
     })

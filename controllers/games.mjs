@@ -111,12 +111,14 @@ export default function initGamesController(db) {
   const create = async (request, response) => {
     // deal out a new shuffled deck for this game.
     const cardDeck = shuffleCards(makeDeck());
-    const playerHand = [cardDeck.pop(), cardDeck.pop()];
+    const player1Hand = [cardDeck.pop(), cardDeck.pop()];
+    const player2Hand = [cardDeck.pop(), cardDeck.pop()];
 
     const newGame = {
       gameState: {
         cardDeck,
-        playerHand,
+        player1Hand,
+        player2Hand,
       },
     };
 
@@ -128,7 +130,9 @@ export default function initGamesController(db) {
       // dont include the deck so the user can't cheat
       response.send({
         id: game.id,
-        playerHand: game.gameState.playerHand,
+        player1Hand: game.gameState.player1Hand,
+        player2Hand: game.gameState.player2Hand,
+
       });
     } catch (error) {
       response.status(500).send(error);
@@ -141,23 +145,32 @@ export default function initGamesController(db) {
       // get the game by the ID passed in the request
       const game = await db.Game.findByPk(request.params.id);
 
+      console.log('printing request.params.id');
+      console.log(request.params.id);
+
       // make changes to the object
-      const playerHand = [game.gameState.cardDeck.pop(), game.gameState.cardDeck.pop()];
+      const player1Hand = [game.gameState.cardDeck.pop(), game.gameState.cardDeck.pop()];
+      const player2Hand = [game.gameState.cardDeck.pop(), game.gameState.cardDeck.pop()];
 
       // update the game with the new info
       await game.update({
         gameState: {
           cardDeck: game.gameState.cardDeck,
-          playerHand,
+          player1Hand,
+          player2Hand,
         },
 
       });
 
+      console.log(game.gameState);
+
       // send the updated game back to the user.
       // dont include the deck so the user can't cheat
+      response.cookie('gameId', game.id);
       response.send({
         id: game.id,
-        playerHand: game.gameState.playerHand,
+        player1Hand: game.gameState.player1Hand,
+        player2Hand: game.gameState.player2Hand,
       });
     } catch (error) {
       response.status(500).send(error);
