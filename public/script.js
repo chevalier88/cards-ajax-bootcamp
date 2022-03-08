@@ -92,16 +92,16 @@ const createGame = function () {
   createGameBtnAgain.remove();
   // Make a request to create a new game
   const postNewGame = axios.post('/games');
-  const postGamesUsers = axios.post('/games-users');
+  // const postGamesUsers = axios.post('/games-users');
 
   // multiple axios calls: https://www.storyblok.com/tp/how-to-send-multiple-requests-using-axios
   // we want to post a new game into the games table
   // as well as post a new entry in the through/join table games_users
 
-  axios.all([postNewGame, postGamesUsers])
+  axios.all([postNewGame])
     .then(axios.spread((...responses) => {
       const newGameResponse = responses[0];
-      const newGameUserResponse = responses[1];
+      // const newGameUserResponse = responses[1];
       // set the global value to the new game.
       currentGame = newGameResponse.data;
 

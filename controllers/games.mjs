@@ -178,24 +178,24 @@ export default function initGamesController(db) {
   };
 
   // cannot figure out yet how to do join table db query
-  const createGamewithUser = async (request, response) => {
-    try {
-      const user = await db.Category.findOne({
-        where: {
-          name: request.,
-        },
-      });
+  // const createGamewithUser = async (request, response) => {
+  //   try {
+  //     const user = await db.Category.findOne({
+  //       where: {
+  //         name: request.,
+  //       },
+  //     });
 
-      // create an item record AND a join table record
-      const item = await category.createItem({
-        name: process.argv[3],
-      });
+  //     // create an item record AND a join table record
+  //     const item = await category.createItem({
+  //       name: process.argv[3],
+  //     });
 
-      console.log(item);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     console.log(item);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   // return all functions we define in an object
   // refer to the routes file above to see this used
   return {
