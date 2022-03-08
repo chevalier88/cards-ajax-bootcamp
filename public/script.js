@@ -5,11 +5,30 @@ let currentGame = null;
 const runGame = function ({ player1Hand, player2Hand }) {
   // manipulate DOM
   const player1Container = document.querySelector('#player1-container');
+  const player2Container = document.querySelector('#player2-container');
+  const infoContainer = document.querySelector('#info-container');
 
-  const player1HandScore = player1Hand[0].rank + player1Hand[1].rank;
-  const player2HandScore = player2Hand[0].rank + player2Hand[1].rank;
+  // if the deck runs empty, get another game going
+  if (currentGame.player1Hand[0] === null) {
+    infoContainer.innerText = `Game ${currentGame.id}: No More Cards Left to Deal!`;
+    player1Container.innerText = '';
+    player2Container.innerText = '';
+    const dealBtnAgain = document.querySelector('#deal-button');
+    dealBtnAgain.remove();
+    const container = document.querySelector('#game-container');
 
-  player1Container.innerText = `
+    // manipulate DOM, set up create game button
+    // create game btn
+    const createGameBtn = document.createElement('button');
+    createGameBtn.addEventListener('click', createGame);
+    createGameBtn.setAttribute('id', 'start-game-button');
+    createGameBtn.innerText = 'Start Game';
+    container.appendChild(createGameBtn);
+  } else {
+    const player1HandScore = player1Hand[0].rank + player1Hand[1].rank;
+    const player2HandScore = player2Hand[0].rank + player2Hand[1].rank;
+
+    player1Container.innerText = `
     Your Hand:
     ====
     ${player1Hand[0].name}
@@ -24,9 +43,7 @@ const runGame = function ({ player1Hand, player2Hand }) {
     ${player1HandScore}
   `;
 
-  const player2Container = document.querySelector('#player2-container');
-
-  player2Container.innerText = `
+    player2Container.innerText = `
     Your Hand:
     ====
     ${player2Hand[0].name}
@@ -41,17 +58,14 @@ const runGame = function ({ player1Hand, player2Hand }) {
     ${player2HandScore}
   `;
 
-  const infoContainer = document.querySelector('#info-container');
-
-  // specify win declaration
-  if (player1HandScore > player2HandScore) {
-    infoContainer.innerText = `Game ${currentGame.id}: Player 1 Wins!`;
-  } else if (player2HandScore > player1HandScore) {
-    infoContainer.innerText = `Game ${currentGame.id}: Player 2 Wins!`;
-  } else if (player1HandScore === player2HandScore) {
-    infoContainer.innerText = `Game ${currentGame.id}: Player Round is Tied!`;
-  } else if (currentGame.player1Hand[0] === null) {
-    infoContainer.innerText = `Game ${currentGame.id}: Player Round is Tied!`;
+    // specify win declaration
+    if (player1HandScore > player2HandScore) {
+      infoContainer.innerText = `Game ${currentGame.id}: Player 1 Wins!`;
+    } else if (player2HandScore > player1HandScore) {
+      infoContainer.innerText = `Game ${currentGame.id}: Player 2 Wins!`;
+    } else if (player1HandScore === player2HandScore) {
+      infoContainer.innerText = `Game ${currentGame.id}: Player Round is Tied!`;
+    }
   }
 };
 
@@ -77,10 +91,19 @@ const createGame = function () {
   const createGameBtnAgain = document.getElementById('start-game-button');
   createGameBtnAgain.remove();
   // Make a request to create a new game
-  axios.post('/games')
-    .then((response) => {
+  const postNewGame = axios.post('/games');
+  const postGamesUsers = axios.post('/games-users');
+
+  // multiple axios calls: https://www.storyblok.com/tp/how-to-send-multiple-requests-using-axios
+  // we want to post a new game into the games table
+  // as well as post a new entry in the through/join table games_users
+
+  axios.all([postNewGame, postGamesUsers])
+    .then(axios.spread((...responses) => {
+      const newGameResponse = responses[0];
+      const newGameUserResponse = responses[1];
       // set the global value to the new game.
-      currentGame = response.data;
+      currentGame = newGameResponse.data;
 
       console.log(currentGame);
 
@@ -91,16 +114,17 @@ const createGame = function () {
       // manipulate the deck that is on the DB.
       // Create a button for it.
       const dealBtn = document.createElement('button');
+      dealBtn.setAttribute('id', 'deal-button');
       dealBtn.addEventListener('click', dealCards);
 
       // display the button
       const container = document.querySelector('#game-container');
       dealBtn.innerText = 'Deal';
       container.appendChild(dealBtn);
-    })
-    .catch((error) => {
+    }))
+    .catch((errors) => {
       // handle error
-      console.log(error);
+      console.log(errors);
     });
 };
 
